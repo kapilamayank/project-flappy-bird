@@ -1,5 +1,5 @@
 const canvas = document.getElementById("canvas1");
-const CANVAS_WIDTH = (canvas.width = 800);
+const CANVAS_WIDTH = (canvas.width = 1200);
 const CANVAS_HEIGHT = (canvas.height = 800);
 
 const ctx = canvas.getContext("2d");
@@ -174,9 +174,55 @@ function handleObstaclesNew() {
   });
 }
 
+class BGLayer {
+  constructor(imagePath, speedModifier) {
+    this.image = new Image();
+    this.image.src = imagePath;
+
+    this.speedModifier = speedModifier;
+
+    this.x = 0;
+    this.y = 0;
+
+    this.originalHeight = 324;
+    this.originalWidth = 576;
+
+    this.adjustedHeight = canvas.height;
+    this.adjustedWidth =
+      (canvas.height / this.originalHeight) * this.originalWidth;
+  }
+
+  update() {
+    this.x = this.x - gameSpeed * this.speedModifier;
+
+    if (this.x < 0 - this.adjustedWidth) this.x = 0;
+  }
+
+  draw() {
+    ctx.drawImage(
+      this.image,
+      this.x,
+      this.y,
+      this.adjustedWidth,
+      this.adjustedHeight
+    );
+    ctx.drawImage(
+      this.image,
+      this.x + this.adjustedWidth,
+      this.y,
+      this.adjustedWidth,
+      this.adjustedHeight
+    );
+  }
+}
+
+const layer1 = new BGLayer("./resources/background/1.png", 0.35);
+const layer2 = new BGLayer("./resources/background/2.png", 0.45);
+const layer3 = new BGLayer("./resources/background/4.png", 0.65);
+
 function displayScore() {
   ctx.fillStyle = "black";
-  ctx.font = "bold 30px Impact";
+  ctx.font = "bold 40px Impact";
   ctx.fillText(`Score: ${score}`, 40, 40);
 }
 
@@ -198,6 +244,15 @@ let lastTime = 0;
 
 function animate(timeStamp) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  layer1.update();
+  layer1.draw();
+
+  layer2.update();
+  layer2.draw();
+
+  layer3.update();
+  layer3.draw();
 
   handleGameParameters();
 
