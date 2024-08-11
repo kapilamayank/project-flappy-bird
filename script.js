@@ -13,7 +13,7 @@ window.addEventListener("load", function () {
 
   // this handles key-presses after game-over
   window.addEventListener("keydown", (e) => {
-    if (e.key === " " && gameOver) {
+    if (e.key === "Enter" && gameOver) {
       gameOver = false;
       gameSpeed = 1;
       gap = 200;
