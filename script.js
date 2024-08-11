@@ -10,16 +10,62 @@ let gap = 200;
 let score = 0;
 let obstacles = [];
 
+// this handles key-presses after game-over
+window.addEventListener("keydown", (e) => {
+  if (e.key === " " && gameOver) {
+    gameOver = false;
+    gameSpeed = 1;
+    gap = 200;
+    score = 0;
+    obstacles = [];
+
+    player1.restart();
+    [layer1, layer2, layer3].forEach((layer) => layer.restart());
+
+    const contentMask = document.querySelector(".content-mask");
+    const gameOverContainer = document.querySelector(".game-over-container");
+
+    contentMask.classList.add("make-disappear");
+    gameOverContainer.classList.add("make-disappear");
+
+    animate(0);
+  } else if (e.key === "Escape") {
+    //! CODE TO GO BACK TO HOME PAGE!
+    console.log("home page");
+  }
+});
+
 class Player {
   constructor() {
-    this.width = 50;
-    this.height = 50;
+    this.spriteWidth = 34;
+    this.spriteHeight = 24;
+
+    this.width = 68;
+    this.height = 48;
 
     this.x = 100;
     this.y = CANVAS_HEIGHT / 2 - this.height / 2;
 
     this.vy = 0;
     this.weight = 0.45;
+
+    this.imageUpFlap = new Image();
+    this.imageUpFlap.src = "./resources/bird/redbird-midflap.png";
+
+    this.imageMidFlap = new Image();
+    this.imageMidFlap.src = "./resources/bird/redbird-midflap.png";
+
+    this.imageDownFlap = new Image();
+    this.imageDownFlap.src = "./resources/bird/redbird-downflap.png";
+
+    this.imageToDraw = new Image();
+    this.imageToDraw = this.imageUpFlap;
+
+    this.frameX = 0;
+
+    this.fps = 20;
+    this.spriteTimeInterval = 1000 / this.fps;
+    this.timeSinceLastSprite = 0;
 
     window.addEventListener("keydown", (e) => {
       if (e.key === " ") {
@@ -28,12 +74,47 @@ class Player {
     });
   }
 
-  draw() {
-    ctx.fillStyle = "blue";
-    ctx.fillRect(this.x, this.y, this.width, this.height);
+  restart() {
+    this.x = 100;
+    this.y = CANVAS_HEIGHT / 2 - this.height / 2;
+
+    this.vy = 0;
+
+    this.frameX = 0;
+    this.timeSinceLastSprite = 0;
   }
 
-  update(obstacles) {
+  draw() {
+    ctx.fillStyle = "blue";
+    ctx.strokeRect(this.x, this.y, this.width, this.height);
+
+    if (this.frameX == 0) this.imageToDraw = this.imageUpFlap;
+    else if (this.frameX == 1) this.imageToDraw = this.imageMidFlap;
+    else if (this.frameX == 2) this.imageToDraw = this.imageDownFlap;
+
+    ctx.drawImage(
+      this.imageToDraw,
+      0,
+      0,
+      this.spriteWidth,
+      this.spriteHeight,
+      this.x,
+      this.y,
+      this.width,
+      this.height
+    );
+  }
+
+  update(obstacles, deltaTime) {
+    //updating the sprite frame:
+    this.timeSinceLastSprite += deltaTime;
+    if (this.timeSinceLastSprite >= this.spriteTimeInterval) {
+      this.frameX = this.frameX + 1;
+      if (this.frameX >= 3) this.frameX = 0;
+
+      this.timeSinceLastSprite = 0;
+    }
+
     //checking for collissions:
     obstacles.forEach((obstacle) => {
       if (this.collissionIsDetected(obstacle)) gameOver = true;
@@ -68,16 +149,6 @@ class Player {
     let playerRightEdge = this.x + this.width;
     let playerTopEdge = this.y;
     let playerBottomEdge = this.y + this.height;
-
-    // console.log(
-    //   obstacleUpperLowerLeftEdge,
-    //   obstacleUpperLowerRightEdge,
-    //   obstacleUpperBottomEdge,
-    //   playerLeftEdge,
-    //   playerRightEdge,
-    //   playerTopEdge,
-    //   playerBottomEdge
-    // );
 
     if (
       playerLeftEdge > obstacleUpperLowerRightEdge ||
@@ -138,26 +209,6 @@ class Obstacle {
   }
 }
 
-let timeSinceLastObstacle = 0;
-let obstacleTimeInterval = 5000;
-
-function handleObstacles(deltaTime) {
-  timeSinceLastObstacle += deltaTime;
-
-  if (timeSinceLastObstacle >= obstacleTimeInterval) {
-    timeSinceLastObstacle = 0;
-    obstacles.push(new Obstacle(gameSpeed, gap));
-  }
-
-  obstacles = obstacles.filter((obstacle) => !obstacle.markedForDeletion);
-  console.log(obstacles);
-
-  obstacles.forEach((obstacle) => {
-    obstacle.update();
-    obstacle.draw();
-  });
-}
-
 let obstacleGapInterval = 300;
 function handleObstaclesNew() {
   const lastObstacle = obstacles[obstacles.length - 1];
@@ -190,6 +241,11 @@ class BGLayer {
     this.adjustedHeight = canvas.height;
     this.adjustedWidth =
       (canvas.height / this.originalHeight) * this.originalWidth;
+  }
+
+  restart() {
+    this.x = 0;
+    this.y = 0;
   }
 
   update() {
@@ -238,8 +294,18 @@ function handleGameParameters() {
   }
 }
 
-const player1 = new Player();
+function handleGameOver() {
+  const contentMask = document.querySelector(".content-mask");
+  const gameOverContainer = document.querySelector(".game-over-container");
 
+  contentMask.classList.remove("make-disappear");
+  gameOverContainer.classList.remove("make-disappear");
+
+  const scoreMessage = document.querySelector(".score-message");
+  scoreMessage.innerText = `Your Score: ${score}`;
+}
+
+const player1 = new Player();
 let lastTime = 0;
 
 function animate(timeStamp) {
@@ -259,16 +325,15 @@ function animate(timeStamp) {
   let deltaTime = timeStamp - lastTime;
   lastTime = timeStamp;
 
-  // handleObstacles(deltaTime);
   handleObstaclesNew();
 
   player1.draw();
-  player1.update(obstacles);
+  player1.update(obstacles, deltaTime);
 
   displayScore();
-  // console.log(obstacles);
 
   if (!gameOver) requestAnimationFrame(animate);
+  else handleGameOver();
 }
 animate(0);
 
