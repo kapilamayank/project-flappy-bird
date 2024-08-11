@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/leaderboardPage.css">
+    <title>Not Really Flappy Bird</title>
+</head>
+<body>
+    <div class="content-container">
+        <div class="nav">
+            <button class="nav-button nav-button-clicked">GLOBAL</button>
+            <button class="nav-button">FRIENDS</button>
+        </div>
+        <div class="leaderboard-data">
+            <div class="header-card">
+                <div class="header-rank">Rank</div>
+                <div class="header-name">Name</div>
+                <div class="header-score">Score</div>
+            </div>
+            <div class="rank-card">
+                <div class="rank">#1</div>
+                <div class="name">Mayank</div>
+                <div class="score">69</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // for the sake of styling
+        document.querySelectorAll(".nav-button").forEach( (navButton) => {
+            navButton.addEventListener("click", () => {
+                document.querySelectorAll(".nav-button").forEach( (allButtons) => {
+                    allButtons.classList.remove("nav-button-clicked");
+                });
+                navButton.classList.add("nav-button-clicked");
+            });
+        });
+    </script>
+</body>
+</html>
