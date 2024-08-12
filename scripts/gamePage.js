@@ -1,4 +1,10 @@
 window.addEventListener("load", function () {
+  let userChoice = "easy";
+  const URL = window.location.search;
+  let urlParams = new URLSearchParams(URL);
+  userChoice = urlParams.get("userChoice") || "easy";
+  console.log(userChoice);
+
   const canvas = document.getElementById("canvas1");
   const CANVAS_WIDTH = (canvas.width = 1200);
   const CANVAS_HEIGHT = (canvas.height = 800);
@@ -32,7 +38,7 @@ window.addEventListener("load", function () {
       animate(0);
     } else if (e.key === "Escape") {
       //! CODE TO GO BACK TO HOME PAGE!
-      console.log("home page");
+      this.window.location.href = "/homePage.html";
     }
   });
 
