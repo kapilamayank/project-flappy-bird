@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/leaderboardPage.css">
+    <title>Not Really Flappy Bird</title>
+</head>
+<body>
+    <div class="content-container">
+        <div class="nav">
+            <button class="nav-button nav-button-clicked global-rankings">GLOBAL</button>
+            <button class="nav-button friend-rankings">FRIENDS</button>
+            <button class="nav-button view-friend-requests">REQUESTS</button>
+            <button class="nav-button send-friend-requests">SEND REQUEST</button>
+        </div>
+        <div class="send-friend-request-form-container hidden js-content-container-child">
+            <form action="http://localhost:8000/user/sendFriendRequest" method="POST" enctype="application/x-www-form-urlencoded">
+                <label for="email" style="font: 2rem 'Comic Sans MS', sans-serif;">Enter Friend's Email</label>
+            
+                <input type="email" id="email" name="email" style="font: 2rem 'Comic Sans MS', sans-serif;" required />
+            
+                <button type="submit" style="font: 2rem 'Comic Sans MS', sans-serif;">Submit</button>
+            </form>
+        </div>
+        <div class="login-or-signup-container js-content-container-child hidden">
+            <button class="login-button general-button general-button-selected js-login-signup-button">Login</button>
+            <button class="signup-button general-button js-login-signup-button">Sign Up</button>
+            <div class="login-form-container">
+                <form id="login-form" action="http://localhost:8000/user/login" method="POST" enctype="application/x-www-form-urlencoded">
+                    <label for="email">Enter Email: </label>
+                    <input type="email" id="loginEmail" name="email" required>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+            <div class="signup-form-container hidden">
+                <form id="signup-form" action="http://localhost:8000/user/signup" method="POST" enctype="application/x-www-form-urlencoded">
+                    <label for="userName">Enter Username: </label>
+                    <input type="text" name="userName" id="userName" required>
+                    <br>
+                    <label for="email">Enter Email: </label>
+                    <input type="email" name="email" id="signupEmail" required>
+                    <br>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+        <div class="received-requests-container hidden js-content-container-child">
+            <div class="friend-request-card">
+                <div class="friend-name">Friend Name</div>
+                <div class="accept-decline-container">
+                    <button class="accept-friend-request-btn">Accept</button>
+                    <button class="decline-friend-request-btn">Decline</button>
+                </div>
+            </div>
+            <div class="friend-request-card">
+                <div class="friend-name">Friend Name</div>
+                <div class="accept-decline-container">
+                    <button class="accept-friend-request-btn">Accept</button>
+                    <button class="decline-friend-request-btn">Decline</button>
+                </div>
+            </div>
+            <div class="friend-request-card">
+                <div class="friend-name">Friend Name</div>
+                <div class="accept-decline-container">
+                    <button class="accept-friend-request-btn">Accept</button>
+                    <button class="decline-friend-request-btn">Decline</button>
+                </div>
+            </div>
+            <div class="friend-request-card">
+                <div class="friend-name">Friend Name</div>
+                <div class="accept-decline-container">
+                    <button class="accept-friend-request-btn">Accept</button>
+                    <button class="decline-friend-request-btn">Decline</button>
+                </div>
+            </div>
+            <div class="friend-request-card">
+                <div class="friend-name">Friend Name</div>
+                <div class="accept-decline-container">
+                    <button class="accept-friend-request-btn">Accept</button>
+                    <button class="decline-friend-request-btn">Decline</button>
+                </div>
+            </div>
+            <div class="friend-request-card">
+                <div class="friend-name">Friend Name</div>
+                <div class="accept-decline-container">
+                    <button class="accept-friend-request-btn">Accept</button>
+                    <button class="decline-friend-request-btn">Decline</button>
+                </div>
+            </div><div class="friend-request-card">
+                <div class="friend-name">Friend Name</div>
+                <div class="accept-decline-container">
+                    <button class="accept-friend-request-btn">Accept</button>
+                    <button class="decline-friend-request-btn">Decline</button>
+                </div>
+            </div>
+            <div class="friend-request-card">
+                <div class="friend-name">Friend Name</div>
+                <div class="accept-decline-container">
+                    <button class="accept-friend-request-btn">Accept</button>
+                    <button class="decline-friend-request-btn">Decline</button>
+                </div>
+            </div>
+            <div class="friend-request-card">
+                <div class="friend-name">Friend Name</div>
+                <div class="accept-decline-container">
+                    <button class="accept-friend-request-btn">Accept</button>
+                    <button class="decline-friend-request-btn">Decline</button>
+                </div>
+            </div>
+        </div>
+        <div class="leaderboard-data js-content-container-child">
+            <div class="header-card">
+                <div class="header-rank">Rank</div>
+                <div class="header-name">Name</div>
+                <div class="header-score">Score</div>
+            </div>
+            <div class="rank-card">
+                <div class="rank">#1</div>
+                <div class="name">Mayank</div>
+                <div class="score">69</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // for the sake of styling
+        document.querySelectorAll(".nav-button").forEach( (navButton) => {
+            navButton.addEventListener("click", () => {
+                document.querySelectorAll(".nav-button").forEach( (allButtons) => {
+                    allButtons.classList.remove("nav-button-clicked");
+                });
+                navButton.classList.add("nav-button-clicked");
+            });
+        });
+    </script>
+    <script src="./scripts/leaderboardPage.js"></script>
+</body>
+</html>

@@ -36,6 +36,7 @@ body {
     flex-flow: row nowrap;
     gap: 3rem;
     align-items: center;
+    justify-content: space-around;
 }
 
 .nav>button {
@@ -87,4 +88,87 @@ body {
     flex-flow: row nowrap;
     justify-content: space-between;
     align-items: center;
+}
+
+.first {
+    background-color: gold;
+}
+
+.second {
+    background-color: silver;
+}
+
+.third {
+    background-color: brown;
+}
+
+.send-friend-request-form-container {
+    margin-top: 125px;
+}
+
+.received-requests-container {
+    margin-top: 125px;
+    font: 2rem 'Comic Sans MS', sans-serif;
+    width: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    overflow-y: scroll;
+    gap: 0.1rem;
+}
+
+.friend-request-card {
+    width: 80%;
+    border: 2px solid black;
+    border-radius: 0.35rem;
+    background-color: rgba(245, 245, 245, 0.8);
+    padding: 0.5rem;
+}
+
+.accept-decline-container>button {
+    font: 1.15rem 'Comic Sans MS', sans-serif;
+    padding: 0.2rem;
+    color: white;
+}
+
+.accept-friend-request-btn {
+    border-color: green;
+    background-color: green;
+}
+
+.decline-friend-request-btn {
+    border-color: red;
+    background-color: red;
+}
+
+.login-or-signup-container {
+    margin-top: 125px;
+    font: 2rem 'Comic Sans MS', sans-serif;
+    font-weight: bold;
+}
+
+.general-button {
+    font: 2rem "Comic Sans MS", Impact, sans-serif;
+    font-weight: 400;
+    color: white;
+    background: none;
+    border: 6px solid white;
+    border-radius: 100px;
+    padding: 0.5rem;
+    transition: all 0.35s;
+}
+
+.general-button-selected {
+    border-color: #00FF40;
+    color: #00FF40;
+}
+
+.login-form-container>form>input, .signup-form-container>form>input, .login-form-container>form>button,
+.signup-form-container>form>button {
+    font: inherit;
+    font-size: 1.5rem;
+}
+
+.hidden {
+    display: none;
 }
