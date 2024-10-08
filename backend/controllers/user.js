@@ -266,7 +266,7 @@ async function handleGetFriendRequests(req, res) {
   let userFriendRequests = currentUser.friendRequests;
   userFriendRequests = userFriendRequests.reverse();
 
-  return res.status(200).json({ friendRequests: userFriendRequests });
+  return res.status(200).json(userFriendRequests);
 }
 
 module.exports = {

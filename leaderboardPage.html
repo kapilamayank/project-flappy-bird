@@ -15,10 +15,10 @@
             <button class="nav-button send-friend-requests">SEND REQUEST</button>
         </div>
         <div class="send-friend-request-form-container hidden js-content-container-child">
-            <form action="http://localhost:8000/user/sendFriendRequest" method="POST" enctype="application/x-www-form-urlencoded">
+            <form id="send-friend-request-form" action="http://localhost:8000/user/sendFriendRequest" method="POST" enctype="application/x-www-form-urlencoded">
                 <label for="email" style="font: 2rem 'Comic Sans MS', sans-serif;">Enter Friend's Email</label>
             
-                <input type="email" id="email" name="email" style="font: 2rem 'Comic Sans MS', sans-serif;" required />
+                <input type="email" id="sendRequestEmail" name="email" style="font: 2rem 'Comic Sans MS', sans-serif;" required />
             
                 <button type="submit" style="font: 2rem 'Comic Sans MS', sans-serif;">Submit</button>
             </form>
@@ -46,79 +46,12 @@
             </div>
         </div>
         <div class="received-requests-container hidden js-content-container-child">
-            <div class="friend-request-card">
-                <div class="friend-name">Friend Name</div>
-                <div class="accept-decline-container">
-                    <button class="accept-friend-request-btn">Accept</button>
-                    <button class="decline-friend-request-btn">Decline</button>
-                </div>
-            </div>
-            <div class="friend-request-card">
-                <div class="friend-name">Friend Name</div>
-                <div class="accept-decline-container">
-                    <button class="accept-friend-request-btn">Accept</button>
-                    <button class="decline-friend-request-btn">Decline</button>
-                </div>
-            </div>
-            <div class="friend-request-card">
-                <div class="friend-name">Friend Name</div>
-                <div class="accept-decline-container">
-                    <button class="accept-friend-request-btn">Accept</button>
-                    <button class="decline-friend-request-btn">Decline</button>
-                </div>
-            </div>
-            <div class="friend-request-card">
-                <div class="friend-name">Friend Name</div>
-                <div class="accept-decline-container">
-                    <button class="accept-friend-request-btn">Accept</button>
-                    <button class="decline-friend-request-btn">Decline</button>
-                </div>
-            </div>
-            <div class="friend-request-card">
-                <div class="friend-name">Friend Name</div>
-                <div class="accept-decline-container">
-                    <button class="accept-friend-request-btn">Accept</button>
-                    <button class="decline-friend-request-btn">Decline</button>
-                </div>
-            </div>
-            <div class="friend-request-card">
-                <div class="friend-name">Friend Name</div>
-                <div class="accept-decline-container">
-                    <button class="accept-friend-request-btn">Accept</button>
-                    <button class="decline-friend-request-btn">Decline</button>
-                </div>
-            </div><div class="friend-request-card">
-                <div class="friend-name">Friend Name</div>
-                <div class="accept-decline-container">
-                    <button class="accept-friend-request-btn">Accept</button>
-                    <button class="decline-friend-request-btn">Decline</button>
-                </div>
-            </div>
-            <div class="friend-request-card">
-                <div class="friend-name">Friend Name</div>
-                <div class="accept-decline-container">
-                    <button class="accept-friend-request-btn">Accept</button>
-                    <button class="decline-friend-request-btn">Decline</button>
-                </div>
-            </div>
-            <div class="friend-request-card">
-                <div class="friend-name">Friend Name</div>
-                <div class="accept-decline-container">
-                    <button class="accept-friend-request-btn">Accept</button>
-                    <button class="decline-friend-request-btn">Decline</button>
-                </div>
-            </div>
         </div>
         <div class="leaderboard-data js-content-container-child">
             <div class="header-card">
                 <div class="header-rank">Rank</div>
                 <div class="header-name">Name</div>
                 <div class="header-score">Score</div>
-            </div>
-            <div class="rank-card">
-                <div class="rank">#1</div>
-                <div class="name">Mayank</div>
-                <div class="score">69</div>
             </div>
         </div>
     </div>

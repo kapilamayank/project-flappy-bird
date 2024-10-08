@@ -78,7 +78,7 @@ document
         credentials: "include",
       });
       const friendRankings = await response.json();
-      console.log(friendRankings);
+
       if (friendRankings.errorMessage) {
         displayChild(".login-or-signup-container");
       } else {
@@ -90,9 +90,6 @@ document
         </div>
       `;
         friendRankings.forEach((entry, idx) => {
-          console.log(entry);
-          console.log(entry.userName, entry.maxScore);
-
           let playerHTML;
           if (idx == 0) {
             playerHTML = `
@@ -187,15 +184,15 @@ loginForm.addEventListener("submit", async (e) => {
     const data = await response.json();
 
     if (data.errorMessage) {
-      console.log("some error");
+      alert("There was an error! Re-try login!");
     } else {
       const accessToken = data.accessToken;
-      console.log(accessToken);
 
       const friendRankingsButton = document.querySelector(".friend-rankings");
       friendRankingsButton.click();
     }
   } catch (e) {
+    alert("There was an error! Re-try login!");
     console.log("error: ", e);
   }
 });
@@ -229,22 +226,165 @@ signupForm.addEventListener("submit", async (e) => {
       alert("Kindly login now");
     }
   } catch (err) {
+    alert("There was an error! Re-try login!");
     console.log("some error", err);
   }
 });
 
-// -----------------------
+// ----------------------------------------------------
 
+// V dealing with friend requests received V
 document
   .querySelector(".view-friend-requests")
-  .addEventListener("click", () => {
+  .addEventListener("click", async () => {
     displayChild(".received-requests-container");
+
+    const response = await fetch("http://localhost:8000/user/friendRequests", {
+      method: "GET",
+      credentials: "include",
+    });
+
+    let friendRequestsArray = await response.json();
+    if (friendRequestsArray.errorMessage) {
+      displayChild(".login-or-signup-container");
+      return;
+    }
+    if (friendRequestsArray.length === 0) {
+      document.querySelector(
+        ".received-requests-container"
+      ).innerHTML = `<h2 style="color: red"> You have no requests </h2>`;
+      return;
+    }
+    // const requestsHTML = ``;
+    friendRequestsArray = friendRequestsArray.map((friendRequest) => {
+      return `<div class="friend-request-card">
+                <div class="friend-name">${friendRequest.userName}</div>
+                <div class="accept-decline-container">
+                    <button class="accept-friend-request-btn" data-id="${friendRequest._id}">Accept</button>
+                    <button class="decline-friend-request-btn data-id="${friendRequest._id}">Decline</button>
+                </div>
+            </div>`;
+    });
+    friendRequestsArray.join("\n");
+
+    document.querySelector(".received-requests-container").innerHTML =
+      friendRequestsArray;
+
+    // event listeners for the generated buttons. these need to be re-attached as the buttons are generated otherwise these won't be attached at all
+    document
+      .querySelectorAll(".accept-friend-request-btn")
+      .forEach((button) => {
+        console.log("here");
+        button.addEventListener("click", async function () {
+          const friendId = this.dataset.id;
+          console.log("here");
+          try {
+            const response = await fetch(
+              "http://localhost:8000/user/acceptFriendRequest",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                  friendId: friendId,
+                }),
+                credentials: "include",
+              }
+            );
+
+            const res = await response.json();
+
+            if (res.errorMessage) {
+              alert("There was some error! Try again!");
+              return;
+            }
+
+            document.querySelector(".view-friend-requests").click(); // update the list again
+          } catch (err) {
+            console.log("error!", err);
+            alert("There was some error!");
+          }
+        });
+      });
+
+    document
+      .querySelectorAll(".decline-friend-request-btn")
+      .forEach((button) => {
+        button.addEventListener("click", async function () {
+          const friendId = this.dataset.id;
+
+          try {
+            const response = await fetch(
+              "http://localhost:8000/user/declineFriendRequest",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                  friendId: friendId,
+                }),
+                credentials: "include",
+              }
+            );
+
+            const res = await response.json();
+
+            if (res.errorMessage) {
+              alert("There was some error! Try again!");
+              return;
+            }
+
+            document.querySelector(".view-friend-requests").click(); // update the list again
+          } catch (err) {
+            console.log("error!", err);
+            alert("There was some error!");
+          }
+        });
+      });
   });
+// ------------------------------------------------------------------------
+
+//! last remaining component
+//! also test decline friend request
+//! post score to global scoreboard, own score on gamePage.js
 
 document
   .querySelector(".send-friend-requests")
   .addEventListener("click", () => {
     displayChild(".send-friend-request-form-container");
+  });
+
+// V deals with the send friend request form
+document
+  .getElementById("send-friend-request-form")
+  .addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const friendEmail = document.getElementById("sendRequestEmail").value;
+
+    const response = await fetch(
+      "http://localhost:8000/user/sendFriendRequest",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          email: friendEmail,
+        }),
+        credentials: "include",
+      }
+    );
+
+    const res = await response.json();
+
+    if (res.errorMessage) {
+      alert("Error: " + res.errorMessage);
+    } else {
+      alert("Friend request sent!");
+    }
   });
 
 const globalRankingsBtn = document.querySelector(".global-rankings");

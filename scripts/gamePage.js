@@ -38,7 +38,7 @@ window.addEventListener("load", function () {
       animate(0);
     } else if (e.key === "Escape") {
       //! CODE TO GO BACK TO HOME PAGE!
-      this.window.location.href = "/homePage.html";
+      this.window.location.href = "/index.html";
     }
   });
 
@@ -86,8 +86,8 @@ window.addEventListener("load", function () {
     }
 
     draw() {
-      ctx.fillStyle = "blue";
-      ctx.strokeRect(this.x, this.y, this.width, this.height);
+      // ctx.fillStyle = "blue";
+      // ctx.strokeRect(this.x, this.y, this.width, this.height);
 
       if (this.frameX == 0) this.imageToDraw = this.imageUpFlap;
       else if (this.frameX == 1) this.imageToDraw = this.imageMidFlap;
@@ -272,9 +272,9 @@ window.addEventListener("load", function () {
     }
   }
 
-  const layer1 = new BGLayer("layer1", 0.35);
-  const layer2 = new BGLayer("layer2", 0.45);
-  const layer3 = new BGLayer("layer3", 0.65);
+  const layer1 = new BGLayer("layer1", 0.3);
+  const layer2 = new BGLayer("layer2", 0.35);
+  const layer3 = new BGLayer("layer3", 0.6);
 
   function displayScore() {
     ctx.fillStyle = "black";
@@ -294,7 +294,7 @@ window.addEventListener("load", function () {
     }
   }
 
-  function handleGameOver() {
+  async function handleGameOver() {
     const contentMask = document.querySelector(".content-mask");
     const gameOverContainer = document.querySelector(".game-over-container");
 
@@ -303,6 +303,38 @@ window.addEventListener("load", function () {
 
     const scoreMessage = document.querySelector(".score-message");
     scoreMessage.innerText = `Your Score: ${score}`;
+
+    await createPostRequest(score);
+  }
+
+  async function createPostRequest(score) {
+    // global
+    let response = await fetch("http://localhost:8000/globalScore", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        score: score,
+      }),
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      alert("Login to add score to global leaderboards");
+      return;
+    }
+
+    response = await fetch("http://localhost:8000/user/addScore", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        score: score,
+      }),
+      credentials: "include",
+    });
   }
 
   const player1 = new Player();
