@@ -172,6 +172,200 @@ window.addEventListener("load", function () {
     }
   }
 
+  class PlayerHard {
+    constructor() {
+      this.spriteWidth = 34;
+      this.spriteHeight = 24;
+
+      this.width = 68;
+      this.height = 48;
+
+      this.x = 100;
+      this.y = CANVAS_HEIGHT / 2 - this.height / 2;
+
+      this.vy = 5;
+
+      this.imageUpFlap = document.getElementById("redbird-upflap");
+      this.imageMidFlap = document.getElementById("redbird-midflap");
+      this.imageDownFlap = document.getElementById("redbird-downflap");
+
+      this.imageToDraw = this.imageUpFlap;
+
+      this.frameX = 0;
+
+      this.fps = 20;
+      this.spriteTimeInterval = 1000 / this.fps;
+      this.timeSinceLastSprite = 0;
+
+      this.generateParticleCounter = 0; // when this becomes equal to targetValue, a new particle is generated
+      this.generateParticleTargetValue = 4;
+      window.addEventListener("keydown", (e) => {
+        if (e.key === " ") {
+          this.vy = -this.vy;
+        }
+      });
+    }
+
+    restart() {
+      this.x = 100;
+      this.y = CANVAS_HEIGHT / 2 - this.height / 2;
+
+      this.vy = 0;
+
+      this.frameX = 0;
+      this.timeSinceLastSprite = 0;
+    }
+
+    draw() {
+      // ctx.fillStyle = "blue";
+      // ctx.strokeRect(this.x, this.y, this.width, this.height);
+
+      if (this.frameX == 0) this.imageToDraw = this.imageUpFlap;
+      else if (this.frameX == 1) this.imageToDraw = this.imageMidFlap;
+      else if (this.frameX == 2) this.imageToDraw = this.imageDownFlap;
+
+      ctx.drawImage(
+        this.imageToDraw,
+        0,
+        0,
+        this.spriteWidth,
+        this.spriteHeight,
+        this.x,
+        this.y,
+        this.width,
+        this.height
+      );
+    }
+
+    update(obstacles, deltaTime) {
+      //updating the sprite frame:
+      this.timeSinceLastSprite += deltaTime;
+      if (this.timeSinceLastSprite >= this.spriteTimeInterval) {
+        this.frameX = this.frameX + 1;
+        if (this.frameX >= 3) this.frameX = 0;
+
+        this.timeSinceLastSprite = 0;
+      }
+
+      //updating the particles:
+      this.generateParticleCounter += 1;
+      if (this.generateParticleCounter == this.generateParticleTargetValue) {
+        this.generateParticleCounter = 0;
+        Particle.particles.push(new Particle(this.x, this.y + this.height / 2));
+      }
+
+      //checking for collissions:
+      obstacles.forEach((obstacle) => {
+        if (this.collissionIsDetected(obstacle)) gameOver = true;
+        this.incrementScore(obstacle);
+      });
+
+      //update velocity and position
+      this.y -= this.vy;
+
+      if (this.y > canvas.height - this.height) {
+        this.y = canvas.height - this.height;
+      }
+
+      if (this.y <= 0) {
+        this.y = 0;
+      }
+    }
+
+    // to detect collission between the player and the obstacle
+    collissionIsDetected(obstacle) {
+      let obstacleUpperLowerLeftEdge = obstacle.x; // same for both
+      let obstacleUpperLowerRightEdge = obstacle.x + obstacle.width; //same for both
+
+      let obstacleUpperBottomEdge = obstacle.upperHeight;
+
+      let obstacleLowerTopEdge = canvas.height - obstacle.lowerHeight;
+
+      let playerLeftEdge = this.x;
+      let playerRightEdge = this.x + this.width;
+      let playerTopEdge = this.y;
+      let playerBottomEdge = this.y + this.height;
+
+      if (
+        playerLeftEdge > obstacleUpperLowerRightEdge ||
+        playerRightEdge < obstacleUpperLowerLeftEdge ||
+        (playerBottomEdge < obstacleLowerTopEdge &&
+          playerTopEdge > obstacleUpperBottomEdge)
+      ) {
+        // no collission
+      } else {
+        gameOver = true;
+      }
+    }
+
+    incrementScore(obstacle) {
+      //player left edge beyond the right edge of the obstacle
+      if (!obstacle.countedInScore && this.x > obstacle.x + obstacle.width) {
+        score++;
+        obstacle.countedInScore = true;
+      }
+    }
+  }
+
+  class Particle {
+    static particles = [];
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+
+      this.vx = -3 + Math.random() * 1.5;
+      this.vy = -0.5 + Math.random() * 2;
+
+      this.radius = 0;
+      this.maxRadius = 35;
+
+      this.markedForDeletion = false;
+
+      this.incrementCounter = 0;
+      this.targetValue = 5;
+
+      this.color = "gray";
+    }
+
+    draw() {
+      ctx.save();
+
+      ctx.globalAlpha = 1 - this.radius / this.maxRadius; // the opacity of all the elements
+      ctx.beginPath();
+      ctx.fillStyle = this.color;
+      ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    update() {
+      this.incrementCounter++;
+      if (this.incrementCounter == this.targetValue) {
+        this.incrementCounter = 0;
+        this.radius += 5;
+      }
+
+      this.x += this.vx;
+      this.y += this.vy;
+
+      if (this.radius >= this.maxRadius || this.x < 0)
+        this.markedForDeletion = true;
+    }
+  }
+
+  function handleParticles() {
+    Particle.particles = Particle.particles.filter(
+      (particle) => !particle.markedForDeletion
+    );
+
+    console.log(Particle.particles);
+
+    Particle.particles.forEach((particle) => {
+      particle.update();
+      particle.draw();
+    });
+  }
   class Obstacle {
     constructor(gameSpeed, gap) {
       this.gap = gap; // gap between upper and lower
@@ -337,7 +531,7 @@ window.addEventListener("load", function () {
     });
   }
 
-  const player1 = new Player();
+  let player1 = userChoice == "easy" ? new Player() : new PlayerHard();
   let lastTime = 0;
 
   function animate(timeStamp) {
@@ -361,6 +555,8 @@ window.addEventListener("load", function () {
 
     player1.draw();
     player1.update(obstacles, deltaTime);
+
+    handleParticles();
 
     displayScore();
 
