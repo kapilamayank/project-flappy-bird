@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
@@ -7,14 +9,12 @@ const userRouter = require("./routes/user");
 const globalScoreRouter = require("./routes/globalScore");
 
 mongoose
-  .connect(
-    "mongodb://127.0.0.1:27017/testFlappy?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2"
-  )
+  .connect(process.env.MONGO_URL)
   .then(() => console.log("MongoDB connected!"))
   .catch((err) => console.log("Mongo Error", err));
 
 const app = express();
-const PORT = 8000;
+const PORT = process.env.PORT || 8000;
 
 //middlewares:
 app.use(express.urlencoded({ extended: true }));
