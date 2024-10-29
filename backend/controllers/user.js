@@ -93,6 +93,10 @@ async function handleSendingFriendRequests(req, res) {
     User.findOne({ email: friendEmail }),
   ]);
 
+  if (!friendUser) {
+    return res.status(400).json({ errorMessage: "Wrong user email!" });
+  }
+
   if (initiatorUser.friends.includes(friendUser._id)) {
     return res.status(400).json({ errorMessage: "Already a friend" });
   }
