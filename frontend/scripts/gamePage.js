@@ -503,7 +503,7 @@ window.addEventListener("load", function () {
 
   async function createPostRequest(score) {
     // global
-    let response = await fetch("http://localhost:8000/globalScore", {
+    let response = await fetch("https://project-flappy-bird-backend.onrender.com/globalScore", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -519,7 +519,7 @@ window.addEventListener("load", function () {
       return;
     }
 
-    response = await fetch("http://localhost:8000/user/addScore", {
+    response = await fetch("https://project-flappy-bird-backend.onrender.com/user/addScore", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",

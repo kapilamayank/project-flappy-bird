@@ -11,7 +11,7 @@ document
   .addEventListener("click", async () => {
     displayChild(".leaderboard-data");
     try {
-      const response = await fetch("http://localhost:8000/globalScore");
+      const response = await fetch("https://project-flappy-bird-backend.onrender.com/globalScore");
       const globalRankings = await response.json();
       let leaderBoardHTML = `
         <div class="header-card">
@@ -73,7 +73,7 @@ document
     displayChild(".leaderboard-data");
 
     try {
-      const response = await fetch("http://localhost:8000/user/friends", {
+      const response = await fetch("https://project-flappy-bird-backend.onrender.com/user/friends", {
         method: "GET",
         credentials: "include",
       });
@@ -170,7 +170,7 @@ loginForm.addEventListener("submit", async (e) => {
   const email = document.getElementById("loginEmail").value;
 
   try {
-    const response = await fetch("http://localhost:8000/user/login", {
+    const response = await fetch("https://project-flappy-bird-backend.onrender.com/user/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -206,7 +206,7 @@ signupForm.addEventListener("submit", async (e) => {
   const userName = document.getElementById("userName").value;
 
   try {
-    const response = await fetch("http://localhost:8000/user/signup", {
+    const response = await fetch("https://project-flappy-bird-backend.onrender.com/user/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -239,7 +239,7 @@ document
   .addEventListener("click", async () => {
     displayChild(".received-requests-container");
 
-    const response = await fetch("http://localhost:8000/user/friendRequests", {
+    const response = await fetch("https://project-flappy-bird-backend.onrender.com/user/friendRequests", {
       method: "GET",
       credentials: "include",
     });
@@ -280,7 +280,7 @@ document
           console.log("here");
           try {
             const response = await fetch(
-              "http://localhost:8000/user/acceptFriendRequest",
+              "https://project-flappy-bird-backend.onrender.com/user/acceptFriendRequest",
               {
                 method: "POST",
                 headers: {
@@ -316,7 +316,7 @@ document
 
           try {
             const response = await fetch(
-              "http://localhost:8000/user/declineFriendRequest",
+              "https://project-flappy-bird-backend.onrender.com/user/declineFriendRequest",
               {
                 method: "POST",
                 headers: {
@@ -365,7 +365,7 @@ document
     const friendEmail = document.getElementById("sendRequestEmail").value;
 
     const response = await fetch(
-      "http://localhost:8000/user/sendFriendRequest",
+      "https://project-flappy-bird-backend.onrender.com/user/sendFriendRequest",
       {
         method: "POST",
         headers: {
