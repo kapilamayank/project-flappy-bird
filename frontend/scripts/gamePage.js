@@ -6,10 +6,15 @@ window.addEventListener("load", function () {
   console.log(userChoice);
 
   const canvas = document.getElementById("canvas1");
-  const CANVAS_WIDTH = (canvas.width = 1200);
-  const CANVAS_HEIGHT = (canvas.height = 800);
+  const CANVAS_WIDTH = (canvas.width = 1000);
+  const CANVAS_HEIGHT = (canvas.height = 600);
+
+  // const dpr = window.devicePixelRatio || 1;
+  // canvas.width = CANVAS_WIDTH * dpr;
+  // canvas.height = CANVAS_HEIGHT * dpr;
 
   const ctx = canvas.getContext("2d");
+  // ctx.scale(dpr, dpr);
 
   let gameOver = false;
   let gameSpeed = 1;

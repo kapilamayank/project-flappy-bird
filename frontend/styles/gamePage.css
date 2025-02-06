@@ -8,15 +8,20 @@ body {
     background: radial-gradient(circle, black, rgb(49, 49, 49));
     height: 100vh;
     width: 100vw;
-    position: relative;
+    position: relative; 
 }
 
 #canvas1 {
-    height: auto;
+    /* height: auto;
     width: 100%;
     max-width: 1200px;
-    max-height: 800px;
-    object-fit: contain;
+    max-height: 800px; */
+    /* width: 1000px;
+    height: 800px; */
+    /* width: 800px;
+    height: 800px;*/
+    /* object-fit: contain;  */
+    display: block;
     border: 2px solid black;
     position: absolute;
     top: 50%;
